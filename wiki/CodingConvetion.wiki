@@ -1,5 +1,18 @@
-#Coding convention 
+#codingconvention
+
+ ==function==
  * function name should start with *uppercase* letter.
  * function parameter must start with suffix *p* to identify them as a parameter variable.
+   e.g void ExampleFunction( int pIntVar, float pFloatVar );
+
+ ==class==
  * class name should start with *c*
+ * member variable should start with *m_* and next letter must be capital.
+   e.g
+     class cExampleClass
+      {
+         public:
+                int m_IntVar;
+      };
+ 
  
