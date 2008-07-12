@@ -11,6 +11,7 @@
       {
          public:
                 int m_IntVar;
+                void  ExampleFunction( int pIntVar, float pFloatVar );
       };
  
  
