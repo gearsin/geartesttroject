@@ -1,5 +1,3 @@
-#codingconvention
-
  ==function==
  * function name should start with *uppercase* letter.
  * function parameter must start with suffix *p* to identify them as a parameter variable.
