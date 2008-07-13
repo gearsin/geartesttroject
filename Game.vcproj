@@ -267,38 +267,38 @@
 			Name="DXUT"
 			>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUT.cpp"
+				RelativePath=".\DXUT\Core\DXUT.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUT.h"
+				RelativePath=".\DXUT\Core\DXUT.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUTenum.cpp"
+				RelativePath=".\DXUT\Core\DXUTenum.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUTenum.h"
+				RelativePath=".\DXUT\Core\DXUTenum.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUTmisc.cpp"
+				RelativePath=".\DXUT\Core\DXUTmisc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Core\DXUTmisc.h"
+				RelativePath=".\DXUT\Core\DXUTmisc.h"
 				>
 			</File>
 			<Filter
 				Name="Optional"
 				>
 				<File
-					RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Optional\SDKmisc.cpp"
+					RelativePath=".\DXUT\Optional\SDKmisc.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\Program Files\Microsoft DirectX SDK (March 2008)\Samples\C++\DXUT\Optional\SDKmisc.h"
+					RelativePath=".\DXUT\Optional\SDKmisc.h"
 					>
 				</File>
 			</Filter>
