@@ -143,6 +143,7 @@ void CALLBACK OnKeyPress( UINT pChar, bool pKeyDown, bool pAltDown, void * pUser
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameRender( IDirect3DDevice9 * pDevice, double pTime, float pElapsedTime, void * pUserContext )
 {
+g_Renderer->PrintText( L"Test Screen Text: %d", 100 );
 	g_Renderer->RenderScene( pDevice );
 }
 
