@@ -2,17 +2,73 @@
 #include <windows.h>
 #include <new>
 #include <list>
+#include <crtdbg.h>
 #include "UtilityFunction.h"
 #include "MemoryManager.h"
+#include <dbghelp.h>
 
 
 //------------------------------------------------------------------------------------------------------------------
-#undef	new
-#undef	delete
-#undef	malloc
-#undef	calloc
-#undef	realloc
-#undef	free
+#if defined( _DEBUG ) | defined ( DEBUG )
+#define DETECT_MEMORY_LEAK 1
+#endif
+
+
+//------------------------------------------------------------------------------------------------------------------
+//disable warning c4996
+#pragma  warning ( disable : 4996 )
+
+
+//------------------------------------------------------------------------------------------------------------------
+#pragma comment(lib,"dbghelp.lib")
+
+
+//------------------------------------------------------------------------------------------------------------------
+// Get the RtlCaptureContext function at runtime so we can support older SDKs
+// and machines without it
+typedef VOID (WINAPI *LPRtlCaptureContext)(PCONTEXT ContextRecord);
+
+
+//------------------------------------------------------------------------------------------------------------------
+//copied from msdn
+/*
+* For diagnostic purpose, blocks are allocated with extra information and
+* stored in a doubly-linked list. This makes all blocks registered with
+* how big they are, when they were allocated, and what they are used for.
+*/
+#define nNoMansLandSize 4
+
+
+//------------------------------------------------------------------------------------------------------------------
+typedef struct _CrtMemBlockHeader
+{
+struct _CrtMemBlockHeader * pBlockHeaderNext;
+struct _CrtMemBlockHeader * pBlockHeaderPrev;
+char * szFileName;
+int nLine;
+#ifdef _WIN64
+/* These items are reversed on Win64 to eliminate gaps in the struct
+* and ensure that sizeof(struct)%16 == 0, so 16-byte alignment is
+* maintained in the debug heap.
+*/
+int nBlockUse;
+size_t nDataSize;
+#else /* _WIN64 */
+size_t nDataSize;
+int nBlockUse;
+#endif /* _WIN64 */
+long lRequest;
+unsigned char gap[nNoMansLandSize];
+/* followed by:
+* unsigned char data[nDataSize];
+* unsigned char anotherGap[nNoMansLandSize];
+*/
+} _CrtMemBlockHeader;
+
+
+//------------------------------------------------------------------------------------------------------------------
+#define pbData(pblock) ((unsigned char *)((_CrtMemBlockHeader *)pblock + 1))
+#define pHdr(pbData) (((_CrtMemBlockHeader *)pbData)-1)
 
 
 //------------------------------------------------------------------------------------------------------------------
@@ -20,159 +76,283 @@ cMemoryManager g_MemoryManager;
 
 
 //------------------------------------------------------------------------------------------------------------------
-//override new and delete 
-#if defined( _DEBUG ) | defined( DEBUG )
-void * operator new( size_t pReportedSize )
-{
-	void *memPtr = ( void* ) malloc( pReportedSize );
-	Assert( !!memPtr, "Memory allocfailed!" );
-	g_MemoryManager.AddTrack( (DWORD)memPtr, pReportedSize, "Test", 1/*pFile, pLineNum*/ );
-	return memPtr;
-};
-
-
-//------------------------------------------------------------------------------------------------------------------ 
-void operator delete( void *pAddr )
-{
-	g_MemoryManager.RemoveTrack( (DWORD)pAddr );
-	free( pAddr );
-};
-
-//------------------------------------------------------------------------------------------------------------------ 
-#endif
-
-
-//------------------------------------------------------------------------------------------------------------------
 cMemoryManager::cMemoryManager()
 {
-	void * pMemBuff = malloc ( sizeof( tAllocList ) );
-	m_AllocList = (cMemoryManager::tAllocList*) pMemBuff;
+#if DETECT_MEMORY_LEAK
+//  _CrtMemCheckpoint( &m_InitalMemState ) ; //take the memory snapshot
+	m_EnableTrack = true;
+	m_NumberOfAlloc = 0;
+	m_TotalAllocSize = 0;
+	m_OriginalHookFunction = _CrtSetAllocHook( cMemoryManager::StaticAllocHook );
+	SymInitialize( GetCurrentProcess(), NULL, TRUE );
+#endif
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
 cMemoryManager::~cMemoryManager()
 {
+	m_EnableTrack = false;
 	DumpUnfreed();
-	Assert( m_AllocList->size() != 0 , "Memory Leak Detected" );
+
+	//_CrtMemState FinalMemState; // holds the memory states
+	//_CrtMemCheckpoint( &m_InitalMemState1 ) ; //take the memory snapshot
+	Assert( m_NumberOfAlloc == 0 , "Memory Leak Detected\n" );
+	_CrtSetAllocHook( m_OriginalHookFunction );
+	SymCleanup( GetCurrentProcess() );
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void cMemoryManager::AddTrack( DWORD pAddr, DWORD pSize, const char *pFname, DWORD pLineNum )
+void cMemoryManager::AddTrack( long pRequestNum, size_t pAllocSize )
 {
-	ALLOC_INFO * memInfo = NULL;
-	if( !m_AllocList )
-	{
-		return ;
-		//m_AllocList = new ( tAllocList );
-	}
-
-	memInfo = new ( ALLOC_INFO );
-	memInfo->m_Address = pAddr;
-	memInfo->m_LineNum = pLineNum;
-	memInfo->m_Size = pSize;
-	strcpy_s( memInfo->m_File, pFname );
-	m_AllocList->insert( m_AllocList->begin(), memInfo );
+	m_EnableTrack = false;
+	sAlloc_Info * memInfo = NULL;
+	memInfo = new ( sAlloc_Info );
+	memInfo->m_RequestID = pRequestNum;
+	memInfo->m_AllocSize = pAllocSize;
+	m_TotalAllocSize += pAllocSize;
+	m_AllocList.insert( m_AllocList.begin(), memInfo );
+	StatckTrace( memInfo );
+	m_EnableTrack = true;
+	m_NumberOfAlloc++;
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void cMemoryManager::RemoveTrack( DWORD pAddr )
+void cMemoryManager::RemoveTrack( long pRequestNum )
 {
-	if( !m_AllocList )
+	m_EnableTrack = false;
+	for( tAllocList::iterator memIt = m_AllocList.begin(); memIt != m_AllocList.end(); memIt++ )
 	{
-		return;
-	}
-
-	unsigned int testCount = 0;
-	for( tAllocList::iterator It = m_AllocList->begin(); It != m_AllocList->end(); It++ )
-	{
-		testCount++;
-		if( (*It)->m_Address == pAddr )
+		sAlloc_Info * allocMem = * memIt;
+		if( allocMem->m_RequestID == pRequestNum )
 		{
-			m_AllocList->remove( (*It) );
+			m_TotalAllocSize -= allocMem->m_AllocSize;
+			Assert( m_TotalAllocSize >= 0, "Alloc size:: Freed more than Allocated" );
+			m_NumberOfAlloc--;
+			m_AllocList.remove( allocMem );
 			break;
 		}
 	}
+	m_EnableTrack = true;
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
 void cMemoryManager::DumpUnfreed()
 {
-  if( !m_AllocList )
-  {
-	  return;
-  }
-
   DWORD totalSize = 0;
   char strBuff[1024];
-  Log( false, "\n====================================================================================" );
-  for( tAllocList::iterator It = m_AllocList->begin(); It != m_AllocList->end(); It++ )
+  Log( "====================================================================================\n\n" );
+  for( tAllocList::iterator It = m_AllocList.begin(); It != m_AllocList.end(); It++ )
   {
-	  ALLOC_INFO * memInfo = *It;
-	  sprintf_s( strBuff, "\nLeak in File: %-50s: (%d),\t\tAddress: %d, \tUnfreed: %d", memInfo->m_File, memInfo->m_LineNum, 
-								memInfo->m_Address, memInfo->m_Size );
-	  Log( false, strBuff );
-	  totalSize += memInfo->m_Size;
+	  sAlloc_Info * memInfo = *It;
+	  long requestNumber = memInfo->m_RequestID;
+	  const char * strMemInfo = GetMemoryAllocatorInfo( memInfo );
+	  sprintf( strBuff, " Memory Leak Found in File %s ( %d bytes )\n", strMemInfo, memInfo->m_AllocSize );
+	  Log( strBuff );
   }
-  Log( false, "\n====================================================================================" );
+
+  Log( "\n====================================================================================\n" );
+  m_AllocList.clear();
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void SetNewOwner( const char * pFileName, const char * pFunctionName, int pLineNum )
+int __cdecl cMemoryManager::StaticAllocHook( int pAllocType, void *pUsrdata, size_t pSize, int pBlockUse, 
+									long pRequest, const unsigned char *pSzFileName, int pLine )
 {
+    if ( pBlockUse == _CRT_BLOCK )
+        return( TRUE );
 
-	Log( false, "\n Test Success" );
-}
+	if( g_MemoryManager.m_EnableTrack  == false )
+		return TRUE;
 
+	switch( pAllocType )
+	{
+		case _HOOK_ALLOC:
+			g_MemoryManager.AddTrack( pRequest, pSize );
+			//Log( " Allocation is called \n" );
+			break;
 
+		case _HOOK_REALLOC:
+		case _HOOK_FREE:
+			_CrtMemBlockHeader* memHeader = pHdr(pUsrdata);
+			size_t  size = memHeader->nDataSize;
+			long requestId = memHeader->lRequest;
+			g_MemoryManager.RemoveTrack( requestId );
+			//Log( "FreeAllocation is called\n" );
+			break;
+	}
 
-
-
-
-
-
-
-
-
-
-//Absolute functions
-#if DETECT_MEMORY_LEAK
-#define _CRTDBG_MAP_ALLOC 
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif
-
-//------------------------------------------------------------------------------------------------------------------
-void cMemoryManager::FindMemoryLeak( int pBreakAlloc )
-{
-#ifdef DETECT_MEMORY_LEAK
-#if defined( _DEBUG ) | defined( DEBUG )
-	_crtBreakAlloc=-1;
-
-	// Get current flag
-	int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
-	// Turn on leak-checking bit.
-	tmpFlag |= _CRTDBG_LEAK_CHECK_DF;	
-	tmpFlag |= _CRTDBG_ALLOC_MEM_DF;
-	tmpFlag |= _CRTDBG_CHECK_ALWAYS_DF;
-	tmpFlag |= _CRTDBG_REPORT_FLAG;
-
-	_CrtSetDbgFlag( tmpFlag );
-#endif
-#endif
+	return TRUE;
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void cMemoryManager::GenerateMemoryLeakReport()
+void cMemoryManager::StatckTrace( sAlloc_Info * memAlloc )
 {
-#ifdef DETECT_MEMORY_LEAK
-#if defined( DEBUG ) | defined ( _DEBUG ) 
-	_CrtDumpMemoryLeaks();
-#endif
-#endif
+	// See if we can get RtlCaptureContext
+	LPRtlCaptureContext pfnRtlCaptureContext = (LPRtlCaptureContext)
+		GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "RtlCaptureContext");
+	if(!pfnRtlCaptureContext)
+	{
+		// RtlCaptureContext not supported
+		return;
+	}
+
+	// Capture context
+	CONTEXT ctx;
+	pfnRtlCaptureContext( &ctx );
+
+	// Init the stack frame for this function
+	STACKFRAME64 theStackFrame;
+	memset( &theStackFrame, 0, sizeof( theStackFrame ) );
+	#ifdef _M_IX86
+		DWORD dwMachineType = IMAGE_FILE_MACHINE_I386;
+		theStackFrame.AddrPC.Offset = ctx.Eip;
+		theStackFrame.AddrPC.Mode = AddrModeFlat;
+		theStackFrame.AddrFrame.Offset = ctx.Ebp;
+		theStackFrame.AddrFrame.Mode = AddrModeFlat;
+		theStackFrame.AddrStack.Offset = ctx.Esp;
+		theStackFrame.AddrStack.Mode = AddrModeFlat;
+	#elif _M_X64
+		DWORD dwMachineType = IMAGE_FILE_MACHINE_AMD64;
+		theStackFrame.AddrPC.Offset = ctx.Rip;
+		theStackFrame.AddrPC.Mode = AddrModeFlat;
+		theStackFrame.AddrFrame.Offset = ctx.Rsp;
+		theStackFrame.AddrFrame.Mode = AddrModeFlat;
+		theStackFrame.AddrStack.Offset = ctx.Rsp;
+		theStackFrame.AddrStack.Mode = AddrModeFlat;
+	#elif _M_IA64
+		DWORD dwMachineType = IMAGE_FILE_MACHINE_IA64;
+		theStackFrame.AddrPC.Offset = ctx.StIIP;
+		theStackFrame.AddrPC.Mode = AddrModeFlat;
+		theStackFrame.AddrFrame.Offset = ctx.IntSp;
+		theStackFrame.AddrFrame.Mode = AddrModeFlat;
+		theStackFrame.AddrBStore.Offset = ctx.RsBSP;
+		theStackFrame.AddrBStore.Mode = AddrModeFlat;
+		theStackFrame.AddrStack.Offset = ctx.IntSp;
+		theStackFrame.AddrStack.Mode = AddrModeFlat;
+	#else
+	#	error "Platform not supported!"
+	#endif
+
+	// Walk up the stack
+	memset( memAlloc->m_AddrPC, 0, sizeof( memAlloc->m_AddrPC ));
+	for( int idx = 0; idx< sAlloc_Info::MaxStackFrames; ++idx )
+	{
+		memAlloc->m_AddrPC[idx] = theStackFrame.AddrPC.Offset;
+		if( !StackWalk64( dwMachineType, GetCurrentProcess(), GetCurrentThread(), &theStackFrame,
+						  &ctx, NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL))
+		{
+			break;
+		}
+	}
+
+	 //tricky to surpress the W4 warning "unreferenced parameter"
+	//UNREFERENCED_PARAMETER( memAlloc );
+}
+
+
+//------------------------------------------------------------------------------------------------------------------
+const char * cMemoryManager::GetMemoryAllocatorInfo( sAlloc_Info * memAlloc )
+{
+	const size_t cnBufferSize = 512;
+	char szFile[ cnBufferSize ];
+	char szFunc[ cnBufferSize ];
+	unsigned int nLine;
+	static char szBuff[ cnBufferSize*3 ];
+
+	// Initialise allocation source
+	strcpy( szFile, "??" );
+	nLine = 0;
+
+	// Resolve PC to function names
+	DWORD64 nPC;
+	for( int idx = 0; idx < sAlloc_Info::MaxStackFrames; ++idx )
+	{
+		// Check for end of stack walk
+		nPC = memAlloc->m_AddrPC[idx];
+		if( nPC == 0 )
+			break;
+
+		// Get function name
+		unsigned char byBuffer[ sizeof( IMAGEHLP_SYMBOL64 ) + cnBufferSize ];
+		IMAGEHLP_SYMBOL64 * pSymbol = ( IMAGEHLP_SYMBOL64* ) byBuffer;
+		DWORD64 dwDisplacement;
+		memset( pSymbol, 0, sizeof( IMAGEHLP_SYMBOL64 ) + cnBufferSize );
+		pSymbol->SizeOfStruct = sizeof( IMAGEHLP_SYMBOL64 );
+		pSymbol->MaxNameLength = cnBufferSize;
+		if( !SymGetSymFromAddr64( GetCurrentProcess(), nPC, &dwDisplacement, pSymbol ) )
+		{
+			//function name not found
+			strcpy(szFunc, "??");
+		}
+		else
+		{
+			pSymbol->Name[cnBufferSize-1] = '\0';
+			// See if we need to go further up the stack
+			if( strncmp( pSymbol->Name, "cMemoryManager::", 16 ) == 0)
+			{
+				// In MemoryManager, keep going...
+			}
+			else if( strncmp( pSymbol->Name, "operator new", 12 ) == 0)
+			{
+				// In operator new or new[], keep going...
+			}
+			else if( strncmp( pSymbol->Name, "malloc_deb", 10 ) == 0 )
+			{
+				//malloc called
+			}
+			else if( strncmp( pSymbol->Name, "malloc", 6 ) == 0 )
+			{
+				// keep going
+			}
+			else if( strncmp( pSymbol->Name, "std::", 5 ) == 0)
+			{
+				// In STL code, keep going...
+			}
+			else
+			{
+				// Found the allocator (Or near to it)
+				strcpy( szFunc, pSymbol->Name );
+				break;
+			}
+		}
+	}
+
+	// Get file/line number
+	if( nPC != 0 )
+	{
+		IMAGEHLP_LINE64 theLine;
+		DWORD dwDisplacement;
+		memset( &theLine, 0, sizeof( theLine ) );
+		theLine.SizeOfStruct = sizeof( theLine );
+		if(!SymGetLineFromAddr64( GetCurrentProcess(), nPC, &dwDisplacement, &theLine ) )
+		{
+			strcpy( szFile, "??" );
+			nLine = 0;
+		}
+		else
+		{
+			const char* pszFile = strrchr( theLine.FileName, '\\');
+			if( !pszFile )
+			{
+				pszFile = theLine.FileName;
+			}
+			else 
+			{ 
+				++pszFile;
+			}
+
+			strncpy( szFile, pszFile, cnBufferSize );
+			nLine = theLine.LineNumber;
+		}
+	}
+
+	// Format into buffer and return
+	sprintf( szBuff, "%s:%d (%s)", szFile, nLine, szFunc );
+	return szBuff;
 }

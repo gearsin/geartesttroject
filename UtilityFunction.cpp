@@ -7,14 +7,14 @@ void Assert( bool pExpression, const char * pMsg )
 {
 	if( !pExpression )
 	{
-		Log( false, pMsg );
+		Log( pMsg );
 		__debugbreak();
 	}
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void Log( bool pWriteToFile, const char * pMsg )
+void Log( const char * pMsg, bool pWriteToFile )
 {
 	if( pWriteToFile )
 	{
