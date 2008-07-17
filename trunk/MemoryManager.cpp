@@ -93,8 +93,16 @@ cMemoryManager::cMemoryManager()
 cMemoryManager::~cMemoryManager()
 {
 	m_EnableTrack = false;
-	DumpUnfreed();
 
+	if( m_NumberOfAlloc > 0 )
+	{
+		DumpUnfreed();
+	}
+	else
+	{
+		Log( "\n No Memory Leak detected" );
+	}
+	
 	//_CrtMemState FinalMemState; // holds the memory states
 	//_CrtMemCheckpoint( &m_InitalMemState1 ) ; //take the memory snapshot
 	Assert( m_NumberOfAlloc == 0 , "Memory Leak Detected\n" );
