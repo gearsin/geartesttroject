@@ -5,7 +5,7 @@
 
 //------------------------------------------------------------------------------------------------------------------
 void Assert( bool pExpression, const char * pMsg );
-void Log( bool pWriteToFile, const char * pMsg );
+void Log( const char * pMsg, bool pWriteToFile = false );
 
 
 //------------------------------------------------------------------------------------------------------------------
