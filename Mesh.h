@@ -1,11 +1,19 @@
 //------------------------------------------------------------------------------------------------------------------
-#ifndef UTILITY_FUNC_H
-#define UTILITY_FUNC_H
+#ifndef MESH_H
+#define MESH_H
 
 
 //------------------------------------------------------------------------------------------------------------------
-void Assert( bool pExpression, const char * pMsg );
-void Log( const char * pFormat, ...);
+class cMesh : public CDXUTXFileMesh
+{
+
+public:
+	cMesh( const WCHAR * pFileName );
+	virtual ~cMesh();
+	void Render();
+
+protected:
+};
 
 
 //------------------------------------------------------------------------------------------------------------------

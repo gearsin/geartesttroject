@@ -4,19 +4,29 @@
 
 
 //------------------------------------------------------------------------------------------------------------------
+#include "UnitTest.h"
+
+
+//------------------------------------------------------------------------------------------------------------------
+class cObject;
+
+
+//------------------------------------------------------------------------------------------------------------------
 typedef std::list< std::wstring > tStringList;
 
 
 //------------------------------------------------------------------------------------------------------------------
-class cRenderer
+class cRenderer : public cUnitTest
 {
 public:
 	cRenderer();
 	cRenderer( IDirect3DDevice9 * pD3Ddevice, unsigned int pLineWidht );
 	~cRenderer();
-	void RenderScene( IDirect3DDevice9 * pD3DRendererDevice );
+	void RenderScene( );
 	void PrintText( const WCHAR * pFormat, ... );
-	HRESULT CreateFont( IDirect3DDevice9 * pD3Ddevice, unsigned int pLineWidth = 15 );
+	HRESULT CreateFont( unsigned int pLineWidth = 15 );
+	IDirect3DDevice9 * GetRendererDevice();
+	virtual void UnitTestFunction();
 
 private:
 	//IDirect3DDevice9 * m_RendererDevice;
@@ -27,6 +37,8 @@ private:
 
 private:
 	void RenderText();
+cObject * m_TestObj;
+	IDirect3DDevice9 * m_D3DRenderer;
 
 protected:
 };
@@ -35,6 +47,12 @@ protected:
 //------------------------------------------------------------------------------------------------------------------
 extern cRenderer * g_Renderer;
 
+
+//------------------------------------------------------------------------------------------------------------------
+inline IDirect3DDevice9 * cRenderer::GetRendererDevice()
+{
+	return m_D3DRenderer;
+}
 
 //------------------------------------------------------------------------------------------------------------------
 #endif

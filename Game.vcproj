@@ -177,6 +177,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Game.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Main.cpp"
 				>
 			</File>
@@ -185,11 +189,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Mesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Object.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\DXUT\Optional\SDKmesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UnitTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UtilityFunction.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Vector.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,6 +224,10 @@
 			>
 			<File
 				RelativePath=".\Callbacks.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game.h"
 				>
 			</File>
 			<File
@@ -214,7 +242,19 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Mesh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Object.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DXUT\Optional\SDKmesh.h"
 				>
 			</File>
 			<File
@@ -222,7 +262,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UnitTest.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UtilityFunction.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Vector.h"
 				>
 			</File>
 		</Filter>
@@ -262,6 +310,22 @@
 			<Filter
 				Name="Optional"
 				>
+				<File
+					RelativePath=".\DXUT\Optional\DXUTcamera.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DXUT\Optional\DXUTcamera.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DXUT\Optional\DXUTres.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DXUT\Optional\DXUTres.h"
+					>
+				</File>
 				<File
 					RelativePath=".\DXUT\Optional\SDKmisc.cpp"
 					>
