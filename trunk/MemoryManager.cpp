@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------------------------------------------
 #if defined( _DEBUG ) | defined ( DEBUG )
-#define DETECT_MEMORY_LEAK 1
+#define DETECT_MEMORY_LEAK 0
 #endif
 
 
@@ -93,19 +93,19 @@ cMemoryManager::cMemoryManager()
 cMemoryManager::~cMemoryManager()
 {
 	m_EnableTrack = false;
-
-	if( m_NumberOfAlloc > 0 )
+	unsigned int UnfreedNum = m_AllocList.size();
+	if( UnfreedNum > 0 )
 	{
 		DumpUnfreed();
 	}
 	else
 	{
-		Log( "\n No Memory Leak detected" );
+		Log( " No Memory Leak detected\n" );
 	}
 	
 	//_CrtMemState FinalMemState; // holds the memory states
 	//_CrtMemCheckpoint( &m_InitalMemState1 ) ; //take the memory snapshot
-	Assert( m_NumberOfAlloc == 0 , "Memory Leak Detected\n" );
+	Assert( UnfreedNum <= 0, " Memory Leak detected\n"  );
 	_CrtSetAllocHook( m_OriginalHookFunction );
 	SymCleanup( GetCurrentProcess() );
 }
@@ -136,9 +136,6 @@ void cMemoryManager::RemoveTrack( long pRequestNum )
 		sAlloc_Info * allocMem = * memIt;
 		if( allocMem->m_RequestID == pRequestNum )
 		{
-			m_TotalAllocSize -= allocMem->m_AllocSize;
-			Assert( m_TotalAllocSize >= 0, "Alloc size:: Freed more than Allocated" );
-			m_NumberOfAlloc--;
 			m_AllocList.remove( allocMem );
 			break;
 		}
@@ -150,20 +147,20 @@ void cMemoryManager::RemoveTrack( long pRequestNum )
 //------------------------------------------------------------------------------------------------------------------
 void cMemoryManager::DumpUnfreed()
 {
-  DWORD totalSize = 0;
-  char strBuff[1024];
-  Log( "====================================================================================\n\n" );
+  Log( "====================================================================================\n" );
+  Log( " Memory Leak detected\n" );
+  Log( " NumOfAllocation    AllocationSize \t\t\n" );
+  Log( "   %d                 %d \n", m_NumberOfAlloc, m_TotalAllocSize );
+  Log( "------------------------------------------------------------------------------------\n" );
+
   for( tAllocList::iterator It = m_AllocList.begin(); It != m_AllocList.end(); It++ )
   {
 	  sAlloc_Info * memInfo = *It;
-	  long requestNumber = memInfo->m_RequestID;
 	  const char * strMemInfo = GetMemoryAllocatorInfo( memInfo );
-	  sprintf( strBuff, " Memory Leak Found in File %s ( %d bytes )\n", strMemInfo, memInfo->m_AllocSize );
-	  Log( strBuff );
+	  Log( " %d bytes is not freed in File: %s \n", memInfo->m_AllocSize, strMemInfo  );
   }
 
-  Log( "\n====================================================================================\n" );
-  m_AllocList.clear();
+  Log( "====================================================================================\n" );
 }
 
 

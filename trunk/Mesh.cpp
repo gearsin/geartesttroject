@@ -1,28 +1,31 @@
 //------------------------------------------------------------------------------------------------------------------
 #include "StdAfx.h"
+#include "Renderer.h"
+#include "Mesh.h"
 
 
 //------------------------------------------------------------------------------------------------------------------
-void Assert( bool pExpression, const char * pMsg )
+cMesh::cMesh( const WCHAR * pFileName ) :
+	CDXUTXFileMesh( pFileName )
 {
-	if( !pExpression )
-	{
-		Log( pMsg );
-		__debugbreak();
-	}
+	HRESULT hr;
+	WCHAR filePath[1024];
+
+	hr = DXUTFindDXSDKMediaFileCch( filePath, MAX_PATH, pFileName );
+	Assert( hr == S_OK, " File not found\n" );
+	hr = Create( g_Renderer->GetRendererDevice() , filePath );
+	Assert( hr == S_OK, "Can't load mesh file\n" );
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void Log( const char * pFormat, ... )
+cMesh::~cMesh()
 {
-	char szBuffer[1024];
- 	va_list args;
-	va_start( args, pFormat );
-	vsprintf_s( szBuffer, pFormat, args );
-
-	OutputDebugStringA( szBuffer );
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
+void cMesh::Render()
+{	
+	CDXUTXFileMesh::Render( g_Renderer->GetRendererDevice() );
+}
