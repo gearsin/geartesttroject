@@ -1,0 +1,34 @@
+--Create file
+currFile = maxFilePath + maxFileName
+startIndx = findString currFile "."
+xmlFile = replace currFile startIndx 4 ".xml"
+createFile xmlFile
+format "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n" to:xmlFile
+
+--get texture name
+fn printMat mat = (
+    case classof mat of
+    (
+        blend: (printMat mat.map1; printMat mat.map2)
+        compositematerial: (for thisMat in mat.materiallist where thisMat!=undefined do printMat thisMat)
+        multimaterial: (for thisMat in mat.materiallist where thisMat!=undefined do printMat thisMat)
+        standardmaterial:
+        (
+            format "mat.name = % \n" mat.name
+            if mat.diffuseMapEnable and classof mat.diffuseMap == Bitmaptexture do (
+                format "diffuseMap = % \n" mat.diffuseMap.fileName
+                )
+            if mat.bumpMapEnable and classof mat.bumpMap == Bitmaptexture do (
+                format "bumpMap = % \n" mat.bumpMap.fileName
+                )
+        )
+    )
+)
+
+(
+clearlistener()
+    for obj in selection where isKindOf obj GeometryClass do (
+        local mat = obj.material
+        printMat mat
+        )
+)
