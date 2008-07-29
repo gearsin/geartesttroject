@@ -173,47 +173,43 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Callbacks.cpp"
+				RelativePath=".\GameCode\Callbacks.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Game.cpp"
+				RelativePath=".\GameCode\Game.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Main.cpp"
+				RelativePath=".\GameCode\Main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MemoryManager.cpp"
+				RelativePath=".\GameCode\MemoryManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Mesh.cpp"
+				RelativePath=".\GameCode\Mesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Object.cpp"
+				RelativePath=".\GameCode\Object.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer.cpp"
+				RelativePath=".\GameCode\Renderer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DXUT\Optional\SDKmesh.cpp"
+				RelativePath=".\GameCode\UnitTest.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\UnitTest.cpp"
+				RelativePath=".\GameCode\UtilityFunction.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\UtilityFunction.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Vector.cpp"
+				RelativePath=".\GameCode\Vector.cpp"
 				>
 			</File>
 		</Filter>
@@ -223,54 +219,43 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Callbacks.h"
+				RelativePath=".\GameCode\Callbacks.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Game.h"
+				RelativePath=".\GameCode\Game.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MemoryManager.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Mesh.h"
+				RelativePath=".\GameCode\MemoryManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Object.h"
+				RelativePath=".\GameCode\Mesh.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer.h"
+				RelativePath=".\GameCode\Object.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DXUT\Optional\SDKmesh.h"
+				RelativePath=".\GameCode\Renderer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\StdAfx.h"
+				RelativePath=".\GameCode\StdAfx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\UnitTest.h"
+				RelativePath=".\GameCode\UnitTest.h"
 				>
 			</File>
 			<File
-				RelativePath=".\UtilityFunction.h"
+				RelativePath=".\GameCode\UtilityFunction.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Vector.h"
+				RelativePath=".\GameCode\Vector.h"
 				>
 			</File>
 		</Filter>
@@ -283,55 +268,67 @@
 		<Filter
 			Name="DXUT"
 			>
-			<File
-				RelativePath=".\DXUT\Core\DXUT.cpp"
+			<Filter
+				Name="Core"
 				>
-			</File>
-			<File
-				RelativePath=".\DXUT\Core\DXUT.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DXUT\Core\DXUTenum.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DXUT\Core\DXUTenum.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DXUT\Core\DXUTmisc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DXUT\Core\DXUTmisc.h"
-				>
-			</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUT.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUT.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUTenum.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUTenum.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUTmisc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Core\DXUTmisc.h"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="Optional"
 				>
 				<File
-					RelativePath=".\DXUT\Optional\DXUTcamera.cpp"
+					RelativePath=".\GameCode\DXUT\Optional\DXUTcamera.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\DXUT\Optional\DXUTcamera.h"
+					RelativePath=".\GameCode\DXUT\Optional\DXUTcamera.h"
 					>
 				</File>
 				<File
-					RelativePath=".\DXUT\Optional\DXUTres.cpp"
+					RelativePath=".\GameCode\DXUT\Optional\DXUTres.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\DXUT\Optional\DXUTres.h"
+					RelativePath=".\GameCode\DXUT\Optional\DXUTres.h"
 					>
 				</File>
 				<File
-					RelativePath=".\DXUT\Optional\SDKmisc.cpp"
+					RelativePath=".\GameCode\DXUT\Optional\SDKmesh.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\DXUT\Optional\SDKmisc.h"
+					RelativePath=".\GameCode\DXUT\Optional\SDKmesh.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Optional\SDKmisc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCode\DXUT\Optional\SDKmisc.h"
 					>
 				</File>
 			</Filter>
