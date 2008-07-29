@@ -157,9 +157,36 @@ const D3DXVECTOR3         g_MaxBound( 160.0f, GROUND_Y, 160.0f );
     g_Camera.SetEnableYAxisMovement( true );
     g_Camera.SetRotateButtons( false, false, true );
     g_Camera.SetScalers( 0.001f, 4.0f );
-    D3DXVECTOR3 vecEye(0.0f, -0 + 0.7f, 0.0f);
-    D3DXVECTOR3 vecAt (0.0f, -0 + 0.7f, 1.0f);
+    D3DXVECTOR3 vecEye( 0.0f, -0 + 0.0f, 0.0f );
+    D3DXVECTOR3 vecAt ( 0.0f, -0 + 0.0f, 1.0f );
     g_Camera.SetViewParams( &vecEye, &vecAt );
 
-	m_TestObj = new cObject( OBJECTS_DIR L"EvilDrone_low.x" );
+	m_D3DRenderer->SetRenderState( D3DRS_NORMALIZENORMALS, TRUE );
+
+   // Enable this light with Direct3D.
+	m_D3DRenderer->SetRenderState( D3DRS_LIGHTING, TRUE );
+	m_D3DRenderer->LightEnable( 0, TRUE );
+
+	// Create ambient light.
+	m_D3DRenderer->SetRenderState( D3DRS_AMBIENT, D3DCOLOR_COLORVALUE( 0.5, 0.5, 0.5, 1.0 ) );
+
+	m_TestObj = new cObject( OBJECTS_DIR L"Multiobj_Test.x" );
+
+	// D3DXVECTOR3 direction;
+	//D3DLIGHT9 lightSource;
+
+	//// We are creating a white directional light.
+	//lightSource.Type = D3DLIGHT_DIRECTIONAL;
+	//lightSource.Range = 1000.0f;
+	//lightSource.Diffuse.r = 0.5f;
+	//lightSource.Diffuse.g = 0.5f;
+	//lightSource.Diffuse.b = 0.5f;
+	//lightSource.Diffuse.a = 1.0f;
+
+	//// Now we set up the lights direction.
+	//direction = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
+	//D3DXVec3Normalize( ( D3DXVECTOR3* )&lightSource.Direction, &direction );
+
+	//// Set the light to the scene.   
+	//m_D3DRenderer->SetLight( 0, &lightSource );
 }
