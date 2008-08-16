@@ -2,6 +2,7 @@
 #include "StdAfx.h"
 #include <io.h>
 #include "Game.h"
+#include "Level.h"
 
 
 //------------------------------------------------------------------------------------------------------------------
@@ -73,18 +74,19 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9 * pDevice, const D3DSURFACE_DES
     //pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
 
     // Setup the camera's projection parameters
+	CFirstPersonCamera * camera = g_Level->GetCamera();
     float fAspectRatio = pBackBufferSurfaceDesc->Width / (FLOAT)pBackBufferSurfaceDesc->Height;
-    g_Camera.SetProjParams( D3DX_PI/4, fAspectRatio, 0.1f, 1000.0f );
+    camera->SetProjParams( D3DX_PI/4, fAspectRatio, 0.1f, 1000.0f );
 
     if( DXUTIsWindowed() )
     {
-        g_Camera.SetRotateButtons( 0, 0, true );
-        g_Camera.SetResetCursorAfterMove( false );
+        camera->SetRotateButtons( 0, 0, true );
+        camera->SetResetCursorAfterMove( false );
     }
     else
     {
-        g_Camera.SetRotateButtons( 0, 0, false, true );
-        g_Camera.SetResetCursorAfterMove( true );
+        camera->SetRotateButtons( 0, 0, false, true );
+        camera->SetResetCursorAfterMove( true );
     }
 
 	return S_OK;
@@ -187,7 +189,11 @@ LRESULT CALLBACK MsgProc( HWND pHwnd, UINT pMsg, WPARAM pWparam, LPARAM pLparam,
 			}
 				 break;
 		default:
-				g_Camera.HandleMessages( pHwnd, pMsg, pWparam, pLparam );	
+			//todo:: Reomove from here camera update must be called from game
+			if( g_Level )
+			{
+				g_Level->GetCamera()->HandleMessages( pHwnd, pMsg, pWparam, pLparam );	
+			}
 	}
 
 	return S_OK;

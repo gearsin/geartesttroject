@@ -115,13 +115,13 @@ macroscript XportTools category:"DirectX Export Tools"
 		  (
 			if ( expLevelInfo.checked == true ) then
 			(
+				print " Exporting Object: %\n" o_arr[i].name
 				format "\t<Object>\n" to:xmlFileHnd				
 				format "\t\t<type>TODO</type>\n" to:xmlFileHnd
 				format "\t\t<ModelFileName>%.x</ModelFileName>\n" o_arr[i].name	to:xmlFileHnd
 				format "\t\t<Pos>% % %</Pos>\n" o_arr[i].pos.x o_arr[i].pos.y o_arr[i].pos.z to:xmlFileHnd
 				format "\t\t<Rotation>% % % %</Rotation>\n" o_arr[i].rotation.x o_arr[i].rotation.y o_arr[i].rotation.z o_arr[i].rotation.w to:xmlFileHnd
 				format "\t\t<Scale>% % %</Scale>\n" o_arr[i].scale.x o_arr[i].scale.y o_arr[i].scale.z to:xmlFileHnd
-				print "\n"
 				format "\t</Object>\n" to:xmlFileHnd
 			)
 		  	fnlx = f_path + "\\" + o_arr[i].name + ".x"			
