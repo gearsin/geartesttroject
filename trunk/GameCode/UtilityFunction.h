@@ -4,8 +4,11 @@
 
 
 //------------------------------------------------------------------------------------------------------------------
-void Assert( bool pExpression, const char * pMsg );
+void Assert( bool pExpression, const char * pMsg, ... );
+void Log( const WCHAR * pFormat, ... );//Unicode
 void Log( const char * pFormat, ...);
+char * TrimString( char * pStr );
+float * GetVectorFromString( std::string pStr );
 
 
 //------------------------------------------------------------------------------------------------------------------

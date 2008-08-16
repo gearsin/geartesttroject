@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<LevelData>
+	<Object>
+		<type>TODO</type>
+		<ModelFileName>Floor.x</ModelFileName>
+		<Pos>0.660645 0.766983 0.0</Pos>
+		<Rotation>0.0 0.0 0.0 1.0</Rotation>
+		<Scale>1.0 1.0 1.0</Scale>
+	</Object>
+	<Object>
+		<type>TODO</type>
+		<ModelFileName>PlayerStart.x</ModelFileName>
+		<Pos>0.0 0.0 0.0</Pos>
+		<Rotation>0.0 0.0 0.0 1.0</Rotation>
+		<Scale>1.0 1.0 1.0</Scale>
+	</Object>
+	<Object>
+		<type>TODO</type>
+		<ModelFileName>EnemySpawn01.x</ModelFileName>
+		<Pos>4.7287 -2.80414 0.916845</Pos>
+		<Rotation>0.0 0.0 0.0 1.0</Rotation>
+		<Scale>1.0 1.0 1.0</Scale>
+	</Object>
+</LevelData>

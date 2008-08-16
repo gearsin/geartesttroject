@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Samples\C++\DXUT\Core&quot;;&quot;$(DXSDK_DIR)\Samples\C++\DXUT\Optional&quot;"
+				AdditionalIncludeDirectories=".\GameCode\DXUT\Core;.\GameCode\DXUT\Optional"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -177,49 +177,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GameCode\Game.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\Main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\MemoryManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\Mesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\Object.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\UnitTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\UtilityFunction.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GameCode\Vector.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
 				RelativePath=".\GameCode\Callbacks.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Frustum.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Frustum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Game.cpp"
 				>
 			</File>
 			<File
@@ -227,7 +197,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameCode\GeometricPrimitives.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\GeometricPrimitives.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Level.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Level.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\MathUtils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\MathUtils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\MemoryManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\MemoryManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Mesh.cpp"
 				>
 			</File>
 			<File
@@ -235,7 +241,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameCode\Object.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\Object.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Renderer.cpp"
 				>
 			</File>
 			<File
@@ -247,7 +261,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameCode\Typedef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\UnitTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\UnitTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\UtilityFunction.cpp"
 				>
 			</File>
 			<File
@@ -255,9 +281,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameCode\Vector.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\Vector.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 		</Filter>
 		<Filter
 			Name="Resource Files"

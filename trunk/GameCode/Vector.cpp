@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------------------------------------------
+#include "StdAfx.h"
 #include "Vector.h"
-#include "UtilityFunction.h"
 #include <math.h>
 
 
@@ -27,18 +27,21 @@ cVector::cVector()
 //------------------------------------------------------------------------------------------------------------------
 cVector::cVector( cVector &pVec )
 {
-	cVector( pVec.m_X, pVec.m_Y, pVec.m_Z );
+	m_X = pVec.m_X;
+	m_Y = pVec.m_Y;
+	m_Z = pVec.m_Z;
+	//cVector( pVec.m_X, pVec.m_Y, pVec.m_Z );
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
-cVector cVector::Dot( const cVector &pVec )
+float cVector::Dot( const cVector &pVec )
 {
 	cVector resultVec;
 	resultVec.m_X = m_X * pVec.m_X;
 	resultVec.m_Y = m_Y * pVec.m_Y;
 	resultVec.m_Z = m_Z * pVec.m_Z;
-	return resultVec;
+	return ( resultVec.m_X + resultVec.m_Y + resultVec.m_Z );
 }
 
 
@@ -48,159 +51,6 @@ cVector cVector::Cross( const cVector & pVec )
 	return cVector(	m_Y * pVec.m_Z  -  m_Z * pVec.m_Y,
 					m_Z * pVec.m_X  -  m_X * pVec.m_Z,
 					m_X * pVec.m_Y  -  m_Y * pVec.m_X );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator +( const cVector & pVec )
-{
-	return cVector( m_X + pVec.m_X, m_Y + pVec.m_Y, m_Z + pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector& cVector::operator +=( const cVector & pVec )
-{
-	m_X += pVec.m_X;
-	m_Y += pVec.m_Y;
-	m_Z += pVec.m_Z;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator -( const cVector & pVec )
-{
-	return cVector( m_X - pVec.m_X, m_Y - pVec.m_Y, m_Z - pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector& cVector::operator -=( const cVector & pVec )
-{
-	m_X -= pVec.m_X;
-	m_Y -= pVec.m_Y;
-	m_Z -= pVec.m_Z;
-	return *this;	
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector& cVector::operator =( const cVector & pVec )
-{
-	m_X = pVec.m_X;
-	m_Y = pVec.m_Y;
-	m_Z = pVec.m_Z;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator -() const
-{
-	return ( cVector ( -m_X, -m_Y, -m_Z ) );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline float cVector::Length()
-{
-	return sqrtf( m_X * m_X + m_Y * m_Y + m_Z * m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline float cVector::SqrLength()
-{
-	return ( m_X * m_X + m_Y * m_Y + m_Z * m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator *=( const float pScale )
-{
-	m_X *= pScale;
-	m_Y *= pScale;
-	m_Z *= pScale;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator *( const float pScale )
-{
-	*this *= pScale;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator /=( const float pVal )
-{
-	float scale = 1.0f / pVal;
-	*this *= scale;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector cVector::operator /( const float pVal )
-{
-	float scale = 1.0f / pVal;
-	*this *= scale;
-	return *this;
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator == ( const cVector & pVec )
-{
-	return ( m_X == pVec.m_X && m_Y == pVec.m_Y && m_Z == pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator != ( const cVector & pVec )
-{
-	return ( m_X != pVec.m_X && m_Y != pVec.m_Y && m_Z != pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator < ( const cVector & pVec )
-{
-	return ( m_X < pVec.m_X && m_Y < pVec.m_Y && m_Z < pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator <= ( const cVector & pVec )
-{
-	return ( m_X <= pVec.m_X && m_Y <= pVec.m_Y && m_Z <= pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator > ( const cVector & pVec )
-{
-	return ( m_X > pVec.m_X && m_Y > pVec.m_Y && m_Z > pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline bool cVector::operator >= ( const cVector & pVec )
-{
-	return ( m_X >= pVec.m_X && m_Y >= pVec.m_Y && m_Z >= pVec.m_Z );
-}
-
-
-//------------------------------------------------------------------------------------------------------------------
-inline cVector& cVector::Normalize()
-{
-	float length = Length();
-	Assert( length <= 0, "Division by ZERO" );
-	*this *= ( 1.0f / length );
-	return *this;
 }
 
 

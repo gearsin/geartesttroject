@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------------------------------------------
 #include "StdAfx.h"
 #include "Game.h"
+#include "Level.h"
 #include "Renderer.h"
 
 
@@ -26,21 +27,13 @@ void cGame::Create( IDirect3DDevice9 *pD3Ddevice )
 {
 	g_Game = new cGame();
 
-    // Initialize the font
-    //V_RETURN( D3DXCreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, 
-    //                     OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, 
-    //                     L"Arial", &g_Render.pFont ) );
-
-    //// Read the D3DX effect file
-    //WCHAR str[MAX_PATH];
-    //V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"Main.fx" ) );
-
 	//Create renderer object, init the font too
 	g_Renderer = new cRenderer( pD3Ddevice, 15 );
-	g_Renderer->UnitTestFunction();
-//	cVector Test;
-//	Test.UnitTestFunction();
 
+	//create level
+	cLevel::Create( L"Test/multitest01.XML" );
+
+	g_Renderer->SetCamera( g_Level->GetCamera() );
 }
 
 
@@ -48,6 +41,12 @@ void cGame::Create( IDirect3DDevice9 *pD3Ddevice )
 //------------------------------------------------------------------------------------------------------------------
 void cGame::Destroy()
 {
+	//cleanup level stuff
+	if( g_Level )
+	{
+		delete g_Level;
+	}
+
 	//clean up renderer
 	if( g_Renderer )
 	{
@@ -67,15 +66,12 @@ void cGame::Destroy()
 //------------------------------------------------------------------------------------------------------------------
 void cGame::Update()
 {
-	g_Camera.FrameMove( 0.005f ); // Place holder there is not update for renderer.
+	g_Level->Update();
 }
 
 
 //------------------------------------------------------------------------------------------------------------------
 void cGame::Render()
 {
-	static int Count = 0;
-g_Renderer->PrintText( L"Test Screen Text: %d", Count++ );
 	g_Renderer->RenderScene( );
-
 }

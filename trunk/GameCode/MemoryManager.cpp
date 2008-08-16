@@ -1,16 +1,15 @@
 //------------------------------------------------------------------------------------------------------------------
-#include <windows.h>
+#include "StdAfx.h"
 #include <new>
 #include <list>
 #include <crtdbg.h>
-#include "UtilityFunction.h"
 #include "MemoryManager.h"
 #include <dbghelp.h>
 
 
 //------------------------------------------------------------------------------------------------------------------
 #if defined( _DEBUG ) | defined ( DEBUG )
-#define DETECT_MEMORY_LEAK 0
+#define DETECT_MEMORY_LEAK 1
 #endif
 
 
