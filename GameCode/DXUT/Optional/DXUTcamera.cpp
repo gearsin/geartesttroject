@@ -268,7 +268,7 @@ VOID CBaseCamera::SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt )
     m_vDefaultLookAt = m_vLookAt = *pvLookatPt;
 
     // Calc the view matrix
-    D3DXVECTOR3 vUp(0,1,0);
+    D3DXVECTOR3 vUp( 0 , 1, 0 );
     D3DXMatrixLookAtLH( &m_mView, pvEyePt, pvLookatPt, &vUp );
 
     D3DXMATRIX mInvView;
@@ -290,8 +290,7 @@ VOID CBaseCamera::SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt )
 //--------------------------------------------------------------------------------------
 // Calculates the projection matrix based on input params
 //--------------------------------------------------------------------------------------
-VOID CBaseCamera::SetProjParams( FLOAT fFOV, FLOAT fAspect, FLOAT fNearPlane,
-                                   FLOAT fFarPlane )
+VOID CBaseCamera::SetProjParams( FLOAT fFOV, FLOAT fAspect, FLOAT fNearPlane, FLOAT fFarPlane )
 {
     // Set attributes for the projection matrix
     m_fFOV        = fFOV;

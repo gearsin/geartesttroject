@@ -154,7 +154,7 @@ void cObject::Update( cFrustum * pFrustum )
 	}
 	else
 	{
-		Log( L" Clip object: %s\n", GetName() );
+	//	Log( L" Clip object: %s\n", GetName() );
 	}
 }
 

@@ -11,9 +11,27 @@ cRenderer * g_Renderer = NULL;
 
 
 //------------------------------------------------------------------------------------------------------------------
-cRenderer::cRenderer( IDirect3DDevice9 * pD3Ddevice, unsigned int  pLineWidth )
+void cRenderer::Create()
 {
-	m_D3DRenderer = pD3Ddevice;
+	g_Renderer = new cRenderer( 15 );
+}
+
+
+//------------------------------------------------------------------------------------------------------------------
+void cRenderer::Destroy()
+{
+	if( g_Renderer )
+	{
+		delete g_Renderer;
+		g_Renderer = NULL;
+	}
+}
+
+
+//------------------------------------------------------------------------------------------------------------------
+cRenderer::cRenderer( unsigned int  pLineWidth )
+{
+	m_D3DRenderer = DXUTGetD3D9Device();
 	m_Camera = NULL;
 	m_ObjectsVisible = 0;
 	m_D3DRenderer->LightEnable( 0, TRUE );
@@ -46,7 +64,6 @@ cRenderer::~cRenderer()
 
 	m_RenderObjects.clear();
 	m_D3DRenderer = NULL;
-	g_Renderer = NULL;
 }
 
 

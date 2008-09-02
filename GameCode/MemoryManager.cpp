@@ -99,12 +99,14 @@ cMemoryManager::~cMemoryManager()
 	}
 	else
 	{
-		Log( " No Memory Leak detected\n" );
+		Log( "***************************************************************\n" );
+		Log( " \t\t No Memory Leak detected\n" );
+		Log( "***************************************************************\n" );
 	}
 	
 	//_CrtMemState FinalMemState; // holds the memory states
 	//_CrtMemCheckpoint( &m_InitalMemState1 ) ; //take the memory snapshot
-	Assert( UnfreedNum <= 0, " Memory Leak detected\n"  );
+	Assert( UnfreedNum <= 0, " **Memory Leak detected\n"  );
 	_CrtSetAllocHook( m_OriginalHookFunction );
 	SymCleanup( GetCurrentProcess() );
 }
@@ -158,7 +160,6 @@ void cMemoryManager::DumpUnfreed()
 	  const char * strMemInfo = GetMemoryAllocatorInfo( memInfo );
 	  Log( " %d bytes is not freed in File: %s \n", memInfo->m_AllocSize, strMemInfo  );
   }
-
   Log( "====================================================================================\n" );
 }
 
@@ -357,6 +358,6 @@ const char * cMemoryManager::GetMemoryAllocatorInfo( sAlloc_Info * memAlloc )
 	}
 
 	// Format into buffer and return
-	sprintf( szBuff, "%s:%d (%s)", szFile, nLine, szFunc );
+	sprintf( szBuff, "%s ( %s ): %d", szFile, szFunc, nLine );
 	return szBuff;
 }

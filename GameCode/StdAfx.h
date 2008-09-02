@@ -23,6 +23,11 @@
 #include "UtilityFunction.h"
 
 
+//----------------------------------------------------------------------------------------------------
+#define DIRECTINPUT_VERSION         DIRECTINPUT_HEADER_VERSION
+#include <DInput.h>
+
+
 //------------------------------------------------------------------------------------------------------------------
 #pragma  warning ( disable : 4995 )
 #pragma  warning ( disable : 4996 )

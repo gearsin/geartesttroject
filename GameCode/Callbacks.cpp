@@ -32,7 +32,7 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9 * pCaps, D3DFORMAT pAdapterFormat, D3
 // should be released here, which generally includes all D3DPOOL_MANAGED resources. 
 void CALLBACK OnDestroyDevice( void * pUserContext )
 {
-	g_Game->Destroy();
+//	g_Game->Destroy();
 }
 
 
@@ -56,7 +56,6 @@ void CALLBACK OnLostDevice( void * pUserContext )
 // here should be released in the OnDestroyDevice callback. 
 HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9 * pDevice, const D3DSURFACE_DESC * pBackBufferSurfacceDesc, void * pUserContext )
 {
-	cGame::Create( pDevice );
 	return S_OK;
 }
 
@@ -74,20 +73,6 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9 * pDevice, const D3DSURFACE_DES
     //pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
 
     // Setup the camera's projection parameters
-	CFirstPersonCamera * camera = g_Level->GetCamera();
-    float fAspectRatio = pBackBufferSurfaceDesc->Width / (FLOAT)pBackBufferSurfaceDesc->Height;
-    camera->SetProjParams( D3DX_PI/4, fAspectRatio, 0.1f, 1000.0f );
-
-    if( DXUTIsWindowed() )
-    {
-        camera->SetRotateButtons( 0, 0, true );
-        camera->SetResetCursorAfterMove( false );
-    }
-    else
-    {
-        camera->SetRotateButtons( 0, 0, false, true );
-        camera->SetResetCursorAfterMove( true );
-    }
 
 	return S_OK;
 }
@@ -192,7 +177,7 @@ LRESULT CALLBACK MsgProc( HWND pHwnd, UINT pMsg, WPARAM pWparam, LPARAM pLparam,
 			//todo:: Reomove from here camera update must be called from game
 			if( g_Level )
 			{
-				g_Level->GetCamera()->HandleMessages( pHwnd, pMsg, pWparam, pLparam );	
+				g_Level->GetCurrentCamera()->HandleMessages( pHwnd, pMsg, pWparam, pLparam );	
 			}
 	}
 
