@@ -9,9 +9,9 @@ class cGame
 public:
 	cGame();
 	~cGame();
-	static void Create( IDirect3DDevice9 * pD3Ddevice );
-	void Destroy();
-	void ChangeDeviceSetting( IDirect3DDevice9 * pD3Ddevice );
+	static void Create();
+	static void Destroy();
+	//void ChangeDeviceSetting( IDirect3DDevice9 * pD3Ddevice );
 	void Update();
 	void Render( );
 

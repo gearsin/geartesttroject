@@ -20,7 +20,9 @@ typedef std::list< cObject* > tObjectPtrList;
 class cRenderer : public cUnitTest
 {
 public:
-	cRenderer( IDirect3DDevice9 * pD3Ddevice, unsigned int pLineWidht );
+	static void Create();
+	static void Destroy();
+	cRenderer( unsigned int pLineWidht );
 	~cRenderer();
 	void RenderScene( );
 	void PrintText( const WCHAR * pFormat, ... );

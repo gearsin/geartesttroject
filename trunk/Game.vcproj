@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3dx10d.lib d3dx9d.lib dxerr.lib comctl32.lib"
+				AdditionalDependencies="d3dx10d.lib d3dx9d.lib dinput8.lib dxerr.lib comctl32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -173,6 +173,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\GameCode\BaseCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\BaseCamera.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\Callbacks.cpp"
 				>
 			</File>
@@ -197,11 +205,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameCode\GameInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\GameInput.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GameCode\GeometricPrimitives.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\GameCode\GeometricPrimitives.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Input.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameCode\Input.h"
 				>
 			</File>
 			<File
@@ -288,12 +312,6 @@
 				RelativePath=".\GameCode\Vector.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
 		</Filter>
 		<Filter
 			Name="Resource Files"

@@ -35,6 +35,17 @@ void cLevel::Create( const WCHAR *pLevelName )
 
 
 //------------------------------------------------------------------------------------------------------------
+void cLevel::Destroy()
+{
+	if( g_Level )
+	{
+		delete g_Level;
+		g_Level = NULL;
+	}
+}
+
+
+//------------------------------------------------------------------------------------------------------------
 cLevel::cLevel( int pLevelID )
 {
 }
@@ -46,6 +57,21 @@ cLevel::cLevel( const WCHAR *pLevelName )
 	ReadLevelData( pLevelName );
 	LoadLevelData();
 	m_CurrentCamera = new CFirstPersonCamera();
+//-------------------------------------------------------------------------------------------------
+    float fAspectRatio = DXUTGetD3D9BackBufferSurfaceDesc()->Width / (FLOAT)DXUTGetD3D9BackBufferSurfaceDesc()->Height;
+    m_CurrentCamera->SetProjParams( D3DX_PI/4, fAspectRatio, 0.1f, 1000.0f );
+
+    if( DXUTIsWindowed() )
+    {
+        m_CurrentCamera->SetRotateButtons( 0, 0, true );
+        m_CurrentCamera->SetResetCursorAfterMove( false );
+    }
+    else
+    {
+        m_CurrentCamera->SetRotateButtons( 0, 0, false, true );
+        m_CurrentCamera->SetResetCursorAfterMove( true );
+    }
+//-------------------------------------------------------------------------------------------------
 	m_CurrentCamera->SetProjParams( DegToRad( 45.0f ), 1.0f, 1.0f, 60.0f );
 	m_Frustum = new cFrustum( m_CurrentCamera->GetFov(), m_CurrentCamera->GetNearClip(), 
 							  m_CurrentCamera->GetFarClip(), m_CurrentCamera->GetAspect() );
@@ -74,7 +100,6 @@ cLevel::~cLevel()
 		delete m_Frustum;
 		m_Frustum = NULL;
 	}
-	g_Level = NULL;
 }
 
 
@@ -273,7 +298,6 @@ if( wcsnicmp( obj->GetName(), L"PlayerStart", wcslen( L"PlayerStart" ) ) == 0 )
 	//obj->SetTranslation( cVector( 0.05f, 0.0f, 0.0f ) );
 	obj->SetRotation( rot );
 }
-
 		obj->Update( m_Frustum );
 	}
 }

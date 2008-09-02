@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------------------------------------------
 #include "StdAfx.h"
 #include "Callbacks.h"
+#include "Game.h"
 
 
 //------------------------------------------------------------------------------------------------------------------
@@ -29,9 +30,13 @@ INT WINAPI wWinMain( HINSTANCE hInstance,HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	DXUTCreateWindow( L"KillTheGerms", hInstance );
 	DXUTCreateDevice( true, 800, 600 );
 
+	//create the game object
+	cGame::Create();
+
 	//run the main game loop
 	DXUTMainLoop();
 
+	cGame::Destroy();
    // TODO: Perform any application-level cleanup here
     return DXUTGetExitCode();
 }

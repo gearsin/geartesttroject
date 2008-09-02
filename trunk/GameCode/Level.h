@@ -23,8 +23,9 @@ public:
 	~cLevel();
 	static void Create( int pLevelId  );
 	static void Create( const WCHAR * pLevelName );// TODO
+	static void Destroy();
 	void Update();
-	CFirstPersonCamera * GetCamera();
+	CFirstPersonCamera * GetCurrentCamera();
 	cFrustum * GetFrustum();
 private:
 	struct sObjectInfo
@@ -93,7 +94,7 @@ inline void cLevel::sObjectInfo::GetObjectInfo( std::string & pTagName, std::str
 
 
 //------------------------------------------------------------------------------------------------------------
-inline CFirstPersonCamera *  cLevel::GetCamera()
+inline CFirstPersonCamera *  cLevel::GetCurrentCamera()
 {
 	return m_CurrentCamera;
 }

@@ -98,22 +98,22 @@ int cFrustum::SphereInFrusutm( const cSphere * pSphere )
 	float distance = 0.0f;
 	int result = eInside_Frustum;
 
-	const char *strClipPlane[] =
-	{
-		"Top",
-		"Bottom",
-		"Left",
-		"Right",
-		"Near",
-		"Far"
-	};
+	//const char *strClipPlane[] =
+	//{
+	//	"Top",
+	//	"Bottom",
+	//	"Left",
+	//	"Right",
+	//	"Near",
+	//	"Far"
+	//};
 
 	for( int idx = 0; idx < ePlane_Max; ++idx )
 	{
 		distance = m_FrustumPlanes[idx].ComputeDistance( pSphere->m_Center );
 		if ( distance < -pSphere->m_Radius )
 		{
-			Log( " InterSect @ %s", strClipPlane[idx] );
+	//		Log( " InterSect @ %s", strClipPlane[idx] );
 			return eOutside_Frustum;
 		}
 		else if (distance < pSphere->m_Radius )
